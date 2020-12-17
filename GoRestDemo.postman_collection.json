@@ -1,0 +1,491 @@
+{
+	"info": {
+		"_postman_id": "4d9c2937-bba4-4168-b42f-3f096cd73ca6",
+		"name": "GoRestDemo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create a user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9cb159b1-ed81-473c-9469-8e7a7e080917",
+						"exec": [
+							"pm.globals.set(\"host\", \"https://gorest.co.in/\");\r",
+							"pm.globals.set(\"token\", \"d5f2f43abb716be1b4f2036761bbc8bff6b07eabae6f507d8d35c78ad05473d3\");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "e760db22-b93f-46ed-9476-d02de1791fa4",
+						"exec": [
+							"var moment = require(\"moment\")\r",
+							"var data = pm.response.json();\r",
+							"\r",
+							"pm.globals.set(\"userId\", data.data.id);\r",
+							"\r",
+							"pm.test(\"Multiple assertions in one test\", function () {\r",
+							"     pm.response.to.be.ok; \r",
+							"     pm.response.to.be.withBody;\r",
+							"     pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify that created_at matches with now\", function () {\r",
+							"\r",
+							"    var now = moment().utc().format(\"yyyy-MM-DDTHH:mm:ss.Z\")\r",
+							"    pm.expect(moment(data.data.created_at).utc().format(\"yyyy-MM-DDTHH:mm:ss.Z\")).to.eql(now);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"//The console will show how the time and date is changed for us to be able to compare\r",
+							"// console.log(moment());\r",
+							"// console.log(data.data.created_at);\r",
+							"// console.log(moment().utc().format(\"yyyy-MM-DDTHH:mm:ss.SSSZ\"));\r",
+							"// console.log(moment(data.data.created_at).utc().format(\"yyyy-MM-DDTHH:mm:ss.SSSZ\"));\r",
+							"// console.log(moment().utc().format(\"yyyy-MM-DDTHH:mm:ss.Z\"));\r",
+							"// console.log(moment(data.data.created_at).utc().format(\"yyyy-MM-DDTHH:mm:ss.Z\"));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"Rocky Balboa\", \"gender\":\"Male\", \"email\":\"Rocky.Balboa@boxing.com\", \"status\":\"Active\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/public-api/users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"public-api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find user by ID and validate response schema",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "28d5216d-8be0-4dc9-99aa-9cbf87ae2ce1",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "04c53b4f-3f9e-49af-a28c-1d34b97e1f9a",
+						"exec": [
+							"var schema = {\r",
+							"    \"$schema\": \"http://json-schema.org/draft-06/schema\",\r",
+							"    \"$id\": \"http://example.com/example.json\",\r",
+							"    \"type\": \"object\",\r",
+							"    \"title\": \"The root schema\",\r",
+							"    \"description\": \"The root schema comprises the entire JSON document.\",\r",
+							"    \"default\": {},\r",
+							"    \"examples\": [\r",
+							"        {\r",
+							"            \"code\": 200,\r",
+							"            \"meta\": null,\r",
+							"            \"data\": {\r",
+							"                \"id\": 1540,\r",
+							"                \"name\": \"Rocky Balboa\",\r",
+							"                \"email\": \"Rocky.Balboa@boxing.com\",\r",
+							"                \"gender\": \"Male\",\r",
+							"                \"status\": \"Active\",\r",
+							"                \"created_at\": \"2020-12-17T16:18:25.940+05:30\",\r",
+							"                \"updated_at\": \"2020-12-17T16:18:25.940+05:30\"\r",
+							"            }\r",
+							"        }\r",
+							"    ],\r",
+							"    \"required\": [\r",
+							"        \"code\",\r",
+							"        \"meta\",\r",
+							"        \"data\"\r",
+							"    ],\r",
+							"    \"properties\": {\r",
+							"        \"code\": {\r",
+							"            \"$id\": \"#/properties/code\",\r",
+							"            \"type\": \"number\",\r",
+							"            \"title\": \"The code schema\",\r",
+							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"            \"default\": 0,\r",
+							"            \"examples\": [\r",
+							"                200\r",
+							"            ]\r",
+							"        },\r",
+							"        \"meta\": {\r",
+							"            \"$id\": \"#/properties/meta\",\r",
+							"            \"type\": \"null\",\r",
+							"            \"title\": \"The meta schema\",\r",
+							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"            \"default\": null,\r",
+							"            \"examples\": [\r",
+							"                null\r",
+							"            ]\r",
+							"        },\r",
+							"        \"data\": {\r",
+							"            \"$id\": \"#/properties/data\",\r",
+							"            \"type\": \"object\",\r",
+							"            \"title\": \"The data schema\",\r",
+							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"            \"default\": {},\r",
+							"            \"examples\": [\r",
+							"                {\r",
+							"                    \"id\": 1540,\r",
+							"                    \"name\": \"Rocky Balboa\",\r",
+							"                    \"email\": \"Rocky.Balboa@boxing.com\",\r",
+							"                    \"gender\": \"Male\",\r",
+							"                    \"status\": \"Active\",\r",
+							"                    \"created_at\": \"2020-12-17T16:18:25.940+05:30\",\r",
+							"                    \"updated_at\": \"2020-12-17T16:18:25.940+05:30\"\r",
+							"                }\r",
+							"            ],\r",
+							"            \"required\": [\r",
+							"                \"id\",\r",
+							"                \"name\",\r",
+							"                \"email\",\r",
+							"                \"gender\",\r",
+							"                \"status\",\r",
+							"                \"created_at\",\r",
+							"                \"updated_at\"\r",
+							"            ],\r",
+							"            \"properties\": {\r",
+							"                \"id\": {\r",
+							"                    \"$id\": \"#/properties/data/properties/id\",\r",
+							"                    \"type\": \"number\",\r",
+							"                    \"title\": \"The id schema\",\r",
+							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                    \"default\": 0,\r",
+							"                    \"examples\": [\r",
+							"                        1540\r",
+							"                    ]\r",
+							"                },\r",
+							"                \"name\": {\r",
+							"                    \"$id\": \"#/properties/data/properties/name\",\r",
+							"                    \"type\": \"string\",\r",
+							"                    \"title\": \"The name schema\",\r",
+							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                    \"default\": \"\",\r",
+							"                    \"examples\": [\r",
+							"                        \"Rocky Balboa\"\r",
+							"                    ]\r",
+							"                },\r",
+							"                \"email\": {\r",
+							"                    \"$id\": \"#/properties/data/properties/email\",\r",
+							"                    \"type\": \"string\",\r",
+							"                    \"title\": \"The email schema\",\r",
+							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                    \"default\": \"\",\r",
+							"                    \"examples\": [\r",
+							"                        \"Rocky.Balboa@boxing.com\"\r",
+							"                    ]\r",
+							"                },\r",
+							"                \"gender\": {\r",
+							"                    \"$id\": \"#/properties/data/properties/gender\",\r",
+							"                    \"type\": \"string\",\r",
+							"                    \"title\": \"The gender schema\",\r",
+							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                    \"default\": \"\",\r",
+							"                    \"examples\": [\r",
+							"                        \"Male\"\r",
+							"                    ]\r",
+							"                },\r",
+							"                \"status\": {\r",
+							"                    \"$id\": \"#/properties/data/properties/status\",\r",
+							"                    \"type\": \"string\",\r",
+							"                    \"title\": \"The status schema\",\r",
+							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                    \"default\": \"\",\r",
+							"                    \"examples\": [\r",
+							"                        \"Active\"\r",
+							"                    ]\r",
+							"                },\r",
+							"                \"created_at\": {\r",
+							"                    \"$id\": \"#/properties/data/properties/created_at\",\r",
+							"                    \"type\": \"string\",\r",
+							"                    \"title\": \"The created_at schema\",\r",
+							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                    \"default\": \"\",\r",
+							"                    \"examples\": [\r",
+							"                        \"2020-12-17T16:18:25.940+05:30\"\r",
+							"                    ]\r",
+							"                },\r",
+							"                \"updated_at\": {\r",
+							"                    \"$id\": \"#/properties/data/properties/updated_at\",\r",
+							"                    \"type\": \"string\",\r",
+							"                    \"title\": \"The updated_at schema\",\r",
+							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                    \"default\": \"\",\r",
+							"                    \"examples\": [\r",
+							"                        \"2020-12-17T16:18:25.940+05:30\"\r",
+							"                    ]\r",
+							"                }\r",
+							"            },\r",
+							"            \"additionalProperties\": false\r",
+							"        }\r",
+							"    },\r",
+							"    \"additionalProperties\": false\r",
+							"};\r",
+							"\r",
+							"\r",
+							"pm.test('Schema is valid', function () {\r",
+							"    pm.expect(tv4.validate(pm.response.json(), schema)).to.be.true;\r",
+							"});\r",
+							"//https://jsonschema.net/"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/public-api/users/{{userId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"public-api",
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update existing user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a9299796-317a-4837-9b98-851a4482da53",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "a0b97974-c423-43f9-8caa-59bc96933b21",
+						"exec": [
+							"var moment = require(\"moment\")\r",
+							"var data = pm.response.json();\r",
+							"\r",
+							"var now = moment().utc().format(\"yyyy-MM-DDTHH:mm:ss.Z\")\r",
+							"\r",
+							"pm.test(\"Verify that updated_at matches with now\", function () {\r",
+							"\r",
+							"    pm.expect(moment(data.data.updated_at).utc().format(\"yyyy-MM-DDTHH:mm:ss.Z\")).to.eql(now);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Verify that updated_at and created_at are different \", function () {\r",
+							"\r",
+							"    pm.expect(data.data.created_at).not.eql(data.data.updated_at);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"//Check all values to make sure test work as expexted\r",
+							"// console.log(moment(data.data.updated_at).utc().format(\"yyyy-MM-DDTHH:mm:ss.Z\"));\r",
+							"// console.log(now);\r",
+							"// console.log(data.data.created_at);\r",
+							"// console.log(data.data.updated_at);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"{{$randomNamePrefix}} {{$randomFullName}} {{$randomNameSuffix}}\", \"email\":\"{{$randomEmail}}\", \"status\":\"Active\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/public-api/users/{{userId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"public-api",
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6f5a4f63-1f18-4578-be36-abda767e06df",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "0fa9eca3-4465-4e69-baa4-4b479b91271c",
+						"exec": [
+							"var data = pm.response.json();\r",
+							"\r",
+							"var statusCodeFromResponse = data.code;\r",
+							"\r",
+							"pm.test(\"Status code in response is in the 2xx\", function () {\r",
+							"    //.closeTo(expected, delta[, msg])\r",
+							"    pm.expect(statusCodeFromResponse).to.be.closeTo(213, 13)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has a correct contect type\", function () {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8');\r",
+							"});\r",
+							"\r",
+							"pm.globals.unset(\"userId\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/public-api/users/{{userId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"public-api",
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "af5fbe51-ce16-4034-a762-932ea28518cd",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "d49ab3ed-69e7-474f-8ecf-4180651b8b6d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
