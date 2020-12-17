@@ -11,4 +11,4 @@ before_script:
 - node_modules/.bin/newman --version
 
 script:
-- node_modules/.bin/newman run  newman run GoRestDemo.postman_collection.json -n 2 -r cli
+- node_modules/.bin/newman run GoRestDemo.postman_collection.json -n 2 -r cli
